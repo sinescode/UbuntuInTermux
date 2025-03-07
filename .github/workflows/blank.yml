@@ -1,4 +1,4 @@
-name: Run SSHX Command
+name: Run SSHX Binary
 
 on:
   push:
@@ -8,6 +8,17 @@ jobs:
   run-sshx:
     runs-on: ubuntu-latest
     steps:
-      - name: Run SSHX Installation
-        run: curl -sSf https://sshx.io/get | sh
-        
+      - name: Download SSHX
+        run: |
+          curl -L -o sshx.tar.gz https://sshx.s3.amazonaws.com/sshx-x86_64-unknown-linux-musl.tar.gz
+          
+      - name: Extract SSHX
+        run: |
+          mkdir sshx_bin
+          tar -xzf sshx.tar.gz -C sshx_bin
+          ls -la sshx_bin  # List extracted files for debugging
+
+      - name: Run SSHX
+        run: |
+          chmod +x sshx_bin/sshx
+          ./sshx_bin/sshx

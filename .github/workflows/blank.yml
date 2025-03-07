@@ -1,0 +1,13 @@
+name: Run SSHX Command
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  run-sshx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run SSHX Installation
+        run: curl -sSf https://sshx.io/get | sh
+        

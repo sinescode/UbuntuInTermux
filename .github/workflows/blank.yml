@@ -7,18 +7,37 @@ on:
 jobs:
   run-sshx:
     runs-on: ubuntu-latest
-    steps:
-      - name: Download SSHX
-        run: |
-          curl -L -o sshx.tar.gz https://sshx.s3.amazonaws.com/sshx-x86_64-unknown-linux-musl.tar.gz
-          
-      - name: Extract SSHX
-        run: |
-          mkdir sshx_bin
-          tar -xzf sshx.tar.gz -C sshx_bin
-          ls -la sshx_bin  # List extracted files for debugging
 
-      - name: Run SSHX
-        run: |
-          chmod +x sshx_bin/sshx
-          ./sshx_bin/sshx
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@v4
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-haskell: 'true'
+        remove-android: 'true'
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Echo Free space
+      run: |
+        echo "Free space:"
+        df -h
+
+    - name: Download SSHX
+      run: |
+        curl -L -o sshx.tar.gz https://sshx.s3.amazonaws.com/sshx-x86_64-unknown-linux-musl.tar.gz
+
+    - name: Extract SSHX
+      run: |
+        mkdir sshx_bin
+        tar -xzf sshx.tar.gz -C sshx_bin
+        ls -la sshx_bin  # List extracted files for debugging
+
+    - name: Run SSHX
+      run: |
+        chmod +x sshx_bin/sshx
+        ./sshx_bin/sshx
+        
